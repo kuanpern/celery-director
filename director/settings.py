@@ -68,6 +68,7 @@ class Config(object):
             ),
             "broker_transport_options": {"master_name": "director"},
         }
+        self.CELERY_CONF_OBJECT = env.str('CELERY_CONF_OBJECT', None)
 
         # Sentry configuration
         self.SENTRY_DSN = env.str("DIRECTOR_SENTRY_DSN", "")

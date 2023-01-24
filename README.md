@@ -70,6 +70,15 @@ product.ORDER:
     - SEND_MAIL
 ```
 
+### Celery configuration
+
+Configure Celery with [`config_from_object`](https://docs.celeryq.dev/en/stable/reference/celery.html#celery.Celery.config_from_object) function by setting "CELERY_CONF_OBJECT" environment variable to the configuration file.
+
+```yaml
+# ---------- Celery ----------
+CELERY_CONF_OBJECT="celeryconfig"
+```
+
 ### Run it
 
 You can simply test your workflow in local :

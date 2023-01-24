@@ -113,7 +113,14 @@ class FlaskCelery(Celery):
 
     def init_app(self, app):
         self.app = app
-        self.conf.update(app.config.get("CELERY_CONF", {}))
+
+        config_obj = app.config.get('CELERY_CONF_OBJECT')
+        if config_obj is not None:
+            self.config_from_object(config_obj)
+        # end if
+        default_config = app.config.get("CELERY_CONF", {})
+        unmapped_config = {key: default_config[key] for key in set(default_config.keys()) - set(self.conf.keys())}
+        self.conf.update(unmapped_config)
 
 
 # Sentry Extension
