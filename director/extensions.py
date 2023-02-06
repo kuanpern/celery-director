@@ -29,8 +29,18 @@ class CeleryWorkflow:
         with open(self.path) as f:
             self.workflows = yaml.load(f, Loader=yaml.SafeLoader)
 
+        self._load_celery_config()
         self.import_user_tasks()
         self.read_schemas()
+
+    def _load_celery_config(self):
+        import os
+        config_obj = os.getenv('CELERY_CONF_OBJECT')
+        if config_obj is None:
+            return
+        _app = Celery()
+        _app.loader.config_from_object(config_obj)
+        self.settings = dict(_app.loader.conf)
 
     def get_by_name(self, name):
         workflow = self.workflows.get(name)
@@ -59,7 +69,7 @@ class CeleryWorkflow:
         try:
             return self.get_by_name(name)["queue"]
         except KeyError:
-            return "celery"
+            return getattr(self, 'settings', {}).get('task_default_queue', 'celery')
 
     def import_user_tasks(self):
         self.plugin_base = PluginBase(package="director.foobar")
